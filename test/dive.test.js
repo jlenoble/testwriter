@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import TestMap, {dive} from '../src/testmap';
+import {dive} from '../src/testmap';
 
 const tests = {
   'a': {
