@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {dive} from '../src/testmap';
-import RunnerMap, {descend} from '../src/runnermap';
+import {descend} from '../src/runnermap';
 
 let counter = 0;
 
