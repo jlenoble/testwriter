@@ -94,6 +94,11 @@ export const flatten = (obj, funcs, arity = 2) => {
       });
       const value = keys2.pop();
       set(flatObj, keys2, value);
+    } else {
+      const keys2 = funcs.slice(0, funcs.length -1).map(func => {
+        return typeof func === 'function' ? func(...args) : func;
+      });
+      set(flatObj, keys2, undefined);
     }
   };
 
