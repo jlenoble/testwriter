@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {flatten} from '../src/testmap';
+import {flatten} from '../src/utils';
 
 describe(`Testing 'flatten' function`, function () {
   const tests = {

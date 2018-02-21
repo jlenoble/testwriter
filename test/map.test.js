@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {map} from '../src/testmap';
+import {map} from '../src/utils';
 
 describe(`Testing 'map' function`, function () {
   const tests = {
