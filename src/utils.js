@@ -16,7 +16,7 @@ export const set = (obj, keys, value) => {
 
 export const count = obj => {
   let counter = 0;
-  Object.keys(key => {
+  Object.keys(obj).forEach(key => {
     const value = obj[key];
     if (typeof value === 'object') {
       counter += count(value);
