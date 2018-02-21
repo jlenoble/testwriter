@@ -21,4 +21,8 @@ export default class RunnerMap {
       enumerable: true,
     });
   }
+
+  defineTests (describe, it) {
+    descend(this.descriptions, describe, it);
+  }
 }

@@ -70,7 +70,7 @@ export default class TestMap {
     });
   }
 
-  describe (funcs, arity = 2) {
+  describeTests (funcs, arity = 2) {
     return flatten(this.tests, funcs, arity);
   }
 }
