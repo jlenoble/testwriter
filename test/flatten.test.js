@@ -21,11 +21,16 @@ describe(`Testing 'flatten' function`, function () {
       'bb': 16,
     };
 
-    expect(flatten(tests, function (a, b) {
-      return a + b;
-    }, function (a, b, tests) {
-      const val = tests[a][b];
-      return val * val;
-    })).to.eql(flat);
+    expect(flatten(
+      tests,
+      [
+        function (a, b) {
+          return a + b;
+        }, function (a, b, tests) {
+          const val = tests[a][b];
+          return val * val;
+        },
+      ]
+    )).to.eql(flat);
   });
 });

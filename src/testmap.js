@@ -34,11 +34,27 @@ export const map = (obj, exec, arity = 2) => {
   return mappedObj;
 };
 
-export const flatten = (obj, keyFunc, valueFunc, arity = 2) => {
+export const flatten = (obj, funcs, arity = 2) => {
   const flatObj = {};
 
   const func = (...args) => {
-    flatObj[keyFunc(...args)] = valueFunc(...args);
+    let lastObj = flatObj;
+    let beforeLastObj;
+    let lastKey;
+    let beforeLastKey;
+
+    funcs.forEach(fn => {
+      beforeLastKey = lastKey;
+      lastKey = typeof fn === 'function' ? fn(...args) : fn;
+
+      if (typeof lastKey === 'string') {
+        beforeLastObj = lastObj;
+        lastObj[lastKey] = lastObj[lastKey] || {};
+        lastObj = lastObj[lastKey];
+      } else {
+        beforeLastObj[beforeLastKey] = lastKey;
+      }
+    });
   };
 
   dive(obj, func, arity);
@@ -52,5 +68,9 @@ export default class TestMap {
       value: tests,
       enumerable: true,
     });
+  }
+
+  describe (funcs, arity = 2) {
+    return flatten(this.tests, funcs, arity);
   }
 }
