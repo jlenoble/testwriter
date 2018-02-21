@@ -56,26 +56,9 @@ export const filter = (obj, test, arity = 2) => {
   const filteredObj = {};
 
   const func = (...args) => {
-    let lastObj = obj;
-    let lastFilteredObj = filteredObj;
-    let beforeLastFilteredObj;
-    let lastKey;
-    args.pop(); // Last element is always obj
-
-    args.forEach(key => {
-      beforeLastFilteredObj = lastFilteredObj;
-      lastKey = key;
-      lastFilteredObj[key] = lastFilteredObj[key] !== undefined
-        ? lastFilteredObj[key]
-        : {};
-      lastFilteredObj = lastFilteredObj[key];
-      lastObj = lastObj[key];
-    });
-
-    if (test(...args, obj)) {
-      beforeLastFilteredObj[lastKey] = lastObj;
-    } else {
-      delete beforeLastFilteredObj[lastKey];
+    const keys = args.slice(0, args.length -1);
+    if (test(...args)) {
+      set(filteredObj, keys, get(obj, keys));
     }
   };
 
