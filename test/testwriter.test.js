@@ -1,7 +1,5 @@
-import chai, {expect} from 'chai';
-import plugin from '../src/chai-stringarray';
-import TestWriter from '../src/testwriter';
-import StringArray from '../src/stringarray';
+import chai from 'chai';
+import TestWriter, {expect, plugin} from '../src/testwriter';
 
 chai.use(plugin);
 
@@ -26,7 +24,7 @@ writer.defineTests([
   },
   function (a, b, tests) {
     return function () {
-      expect(new StringArray(...new Set([a, b]))).to.equiv(
+      expect(...new Set([a, b])).to.equiv(
         tests[a][b].split(','));
     };
   },

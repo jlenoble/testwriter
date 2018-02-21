@@ -1,5 +1,8 @@
+import StringArray from './stringarray';
 import TestMap from './testmap';
 import RunnerMap from './runnermap';
+import expect from './expect';
+import plugin from './chai-stringarray';
 
 export default class TestWriter {
   constructor (tests) {
@@ -15,3 +18,6 @@ export default class TestWriter {
     runnerMap.defineTests(describe, it);
   }
 }
+
+export {TestMap, TestWriter, StringArray, expect, plugin};
+export * from './utils';
