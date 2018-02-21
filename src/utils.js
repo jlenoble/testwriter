@@ -1,3 +1,19 @@
+export const get = (obj, keys) => {
+  return keys.reduce((val, key) => {
+    return val[key];
+  }, obj);
+};
+
+export const set = (obj, keys, value) => {
+  const l = keys.length - 1;
+  keys.reduce((obj, key, i) => {
+    if (obj[key] === undefined) {
+      obj[key] = i === l ? value : {}; // eslint-disable-line no-param-reassign
+    }
+    return obj[key];
+  }, obj);
+};
+
 export const descend = (descriptions, describe, it) => {
   Object.keys(descriptions).forEach(key => {
     const value = descriptions[key];
@@ -27,21 +43,8 @@ export const map = (obj, exec, arity = 2) => {
   const mappedObj = {};
 
   const func = (...args) => {
-    let lastObj = mappedObj;
-    let beforeLastObj;
-    let lastKey;
-    args.pop(); // Last element is always obj
-
-    args.forEach(key => {
-      beforeLastObj = lastObj;
-      lastKey = key;
-      lastObj[key] = lastObj[key] !== undefined
-        ? lastObj[key]
-        : {};
-      lastObj = lastObj[key];
-    });
-
-    beforeLastObj[lastKey] = exec(...args, obj);
+    const keys = args.slice(0, args.length -1);
+    set(mappedObj, keys, exec(...args));
   };
 
   dive(obj, func, arity);
