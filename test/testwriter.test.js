@@ -1,5 +1,5 @@
 import chai from 'chai';
-import TestWriter, {expect, plugin} from '../src/testwriter';
+import TestWriter, {expect, plugin} from '../src/index';
 
 chai.use(plugin);
 
