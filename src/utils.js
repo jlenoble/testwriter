@@ -14,6 +14,19 @@ export const set = (obj, keys, value) => {
   }, obj);
 };
 
+export const count = obj => {
+  let counter = 0;
+  Object.keys(key => {
+    const value = obj[key];
+    if (typeof value === 'object') {
+      counter += count(value);
+    } else {
+      ++counter;
+    }
+  });
+  return counter;
+};
+
 export const descend = (descriptions, describe, it) => {
   Object.keys(descriptions).forEach(key => {
     const value = descriptions[key];
@@ -27,6 +40,7 @@ export const descend = (descriptions, describe, it) => {
     }
   });
 };
+
 export const dive = (obj, exec, arity = 2, keys = [], root) => {
   root || (root = obj); // eslint-disable-line no-param-reassign
 
@@ -71,25 +85,16 @@ export const flatten = (obj, funcs, arity = 2) => {
   const flatObj = {};
 
   const func = (...args) => {
-    let lastObj = flatObj;
-    let beforeLastObj;
-    let lastKey;
-    let beforeLastKey;
+    const keys = args.slice(0, args.length -1);
+    const value = get(obj, keys);
 
-    funcs.forEach(fn => {
-      beforeLastKey = lastKey;
-      lastKey = typeof fn === 'function' ? fn(...args) : fn;
-
-      if (typeof lastKey === 'string') {
-        beforeLastObj = lastObj;
-        lastObj[lastKey] = lastObj[lastKey] !== undefined
-          ? lastObj[lastKey]
-          : {};
-        lastObj = lastObj[lastKey];
-      } else {
-        beforeLastObj[beforeLastKey] = lastKey;
-      }
-    });
+    if (value !== undefined) {
+      const keys2 = funcs.map(func => {
+        return typeof func === 'function' ? func(...args) : func;
+      });
+      const value = keys2.pop();
+      set(flatObj, keys2, value);
+    }
   };
 
   dive(obj, func, arity);
