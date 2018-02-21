@@ -34,6 +34,18 @@ export const map = (obj, exec, arity = 2) => {
   return mappedObj;
 };
 
+export const flatten = (obj, keyFunc, valueFunc, arity = 2) => {
+  const flatObj = {};
+
+  const func = (...args) => {
+    flatObj[keyFunc(...args)] = valueFunc(...args);
+  };
+
+  dive(obj, func, arity);
+
+  return flatObj;
+};
+
 export default class TestMap {
   constructor (tests) {
     Object.defineProperty(this, 'tests', {
