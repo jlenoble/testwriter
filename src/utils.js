@@ -4,12 +4,10 @@ export const descend = (descriptions, describe, it) => {
 
     if (typeof value === 'object') {
       describe(key, function () {
-        descend(descriptions[key], describe, it);
+        descend(value, describe, it);
       });
     } else {
-      it(key, function () {
-        value();
-      });
+      it(key, value);
     }
   });
 };
@@ -32,12 +30,14 @@ export const map = (obj, exec, arity = 2) => {
     let lastObj = mappedObj;
     let beforeLastObj;
     let lastKey;
-    args.pop(); // Last elemenet is always obj
+    args.pop(); // Last element is always obj
 
     args.forEach(key => {
       beforeLastObj = lastObj;
       lastKey = key;
-      lastObj[key] = lastObj[key] || {};
+      lastObj[key] = lastObj[key] !== undefined
+        ? lastObj[key]
+        : {};
       lastObj = lastObj[key];
     });
 
@@ -47,6 +47,38 @@ export const map = (obj, exec, arity = 2) => {
   dive(obj, func, arity);
 
   return mappedObj;
+};
+
+export const filter = (obj, test, arity = 2) => {
+  const filteredObj = {};
+
+  const func = (...args) => {
+    let lastObj = obj;
+    let lastFilteredObj = filteredObj;
+    let beforeLastFilteredObj;
+    let lastKey;
+    args.pop(); // Last element is always obj
+
+    args.forEach(key => {
+      beforeLastFilteredObj = lastFilteredObj;
+      lastKey = key;
+      lastFilteredObj[key] = lastFilteredObj[key] !== undefined
+        ? lastFilteredObj[key]
+        : {};
+      lastFilteredObj = lastFilteredObj[key];
+      lastObj = lastObj[key];
+    });
+
+    if (test(...args, obj)) {
+      beforeLastFilteredObj[lastKey] = lastObj;
+    } else {
+      delete beforeLastFilteredObj[lastKey];
+    }
+  };
+
+  dive(obj, func, arity);
+
+  return filteredObj;
 };
 
 export const flatten = (obj, funcs, arity = 2) => {
@@ -64,7 +96,9 @@ export const flatten = (obj, funcs, arity = 2) => {
 
       if (typeof lastKey === 'string') {
         beforeLastObj = lastObj;
-        lastObj[lastKey] = lastObj[lastKey] || {};
+        lastObj[lastKey] = lastObj[lastKey] !== undefined
+          ? lastObj[lastKey]
+          : {};
         lastObj = lastObj[lastKey];
       } else {
         beforeLastObj[beforeLastKey] = lastKey;
